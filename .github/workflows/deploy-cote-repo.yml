@@ -40,8 +40,8 @@ jobs:
       - name: Deploy to another repo
         uses: peaceiris/actions-gh-pages@v4
         with:
-            personal_token: ${{ secrets.MY_GITHUB_PAT }}  # Personal Access Token 필요
-            publish_dir: ./dist
-            external_repository: han000woo/han000woo.github.io  
-            publish_branch: main
-            destination_dir: cote-repo-monitoring
+          personal_token: ${{ secrets.MY_GITHUB_PAT }}      # 반드시 personal_token
+          publish_dir: ./cote-repo-monitoring/dist           # 수정: 정확한 경로 지정
+          external_repository: han000woo/han000woo.github.io
+          publish_branch: main
+          destination_dir: cote-repo-monitoring
