@@ -40,7 +40,7 @@ jobs:
       - name: Deploy to another repo
         uses: peaceiris/actions-gh-pages@v4
         with:
-            github_token: ${{ secrets.MY_GITHUB_PAT }}  # Personal Access Token 필요
+            personal_token: ${{ secrets.MY_GITHUB_PAT }}  # Personal Access Token 필요
             publish_dir: ./dist
             external_repository: han000woo/han000woo.github.io  
             publish_branch: main
