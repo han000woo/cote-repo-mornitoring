@@ -11,9 +11,4 @@ export default defineConfig({
     vueDevTools(),
   ],
   base: '/cote-repo-monitoring/',
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    },
-  },
 })
