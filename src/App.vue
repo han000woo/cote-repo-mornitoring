@@ -21,8 +21,19 @@
           </div>
         </div>
         <!-- SESAC 테마에 맞는 range-color로 수정 -->
-        <calendar-heatmap :values="repo.values" :end-date="endDate" tooltip-unit="commits" :round="2"
-          :range-color="['#f0f0f0', '#bce3a0', '#7DC242', '#3a9d49', '#006432']" />
+        <calendar-heatmap :values="repo.values" :end-date="endDate" tooltip-unit="commits" :round="2" :range-color="[
+          '#f0f0f0',
+          '#e8f5e4',
+          '#d9f0cf',
+          '#c7e9b8',
+          '#b3e3a1',
+          '#9ddc88',
+          '#86d46e',
+          '#6fcb54',
+          '#54b33c',
+          '#3a9d49',
+          '#006432'
+        ]" />
       </div>
     </div>
   </div>
@@ -251,5 +262,77 @@ text.vch__month__label {
 
 text.vch__day__label {
   font-size: 10px;
+}
+
+@media (max-width: 600px) {
+
+  #app {
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  img {
+    width: 2.8rem;
+  }
+
+  .repo-section {
+    padding: 18px;
+    margin-bottom: 28px;
+    border-radius: 10px;
+  }
+
+  /* 제목 + 요약이 세로로 정렬되도록 */
+  .repo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .repo-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .commit-summary {
+    width: 100%;
+    align-items: flex-start;
+    margin-top: 6px;
+  }
+
+  .commit-lastDay {
+    font-size: 1.0rem;
+  }
+
+  /* 히트맵이 화면 넘어가도 자연스럽게 스크롤 */
+  .repo-section {
+    overflow-x: auto;
+  }
+
+  /* 월/요일 라벨 크기 축소 */
+  text.vch__month__label {
+    font-size: 10px;
+  }
+
+  text.vch__day__label {
+    font-size: 8px;
+  }
+}
+
+/* 초미니 화면(아이폰 SE 등) */
+@media (max-width: 380px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  img {
+    width: 2.5rem;
+  }
+  .repo-header h3 {
+    font-size: 1.2rem;
+  }
 }
 </style>
