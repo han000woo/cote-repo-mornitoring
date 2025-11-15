@@ -15,8 +15,8 @@
         <div class="repo-header">
           <h3>{{ repoName }}</h3>
           <div class="commit-summary">
-            <span class="commit-today">
-              오늘: <strong>{{ repo.todayCommits }}</strong> 커밋
+            <span class="commit-lastDay">
+              어제: <strong>{{ repo.lastDayCommits }}</strong> 커밋
             </span>
           </div>
         </div>
@@ -43,26 +43,26 @@ import { CalendarHeatmap } from 'vue3-calendar-heatmap';
 const commitData = ref({});
 const isLoading = ref(true);
 const error = ref(null);
-const endDate = ref(new Date().toISOString().split('T')[0]); // 오늘 날짜
-const todayFormatted = ref('');
+const endDate = ref(new Date(Date.now() - 86400000).toISOString().split('T')[0]); // 어제 날짜
+const lastDayFormatted = ref('');
 
 // 2. 마운트 시 데이터 로드
 onMounted(async () => {
-  // (신규) 오늘 날짜 포맷팅
+  // (신규) 어제 날짜 포맷팅
   const now = new Date();
-  todayFormatted.value = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 기준`;
+  lastDayFormatted.value = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 기준`;
 
   try {
     // GitHub API가 아닌, 우리 앱과 함께 배포된 public/commits.json을 로드
     const response = await axios.get('./commits.json');
     const rawData = response.data;
-    const todayString = endDate.value; // YYYY-MM-DD 형식의 오늘 날짜
+    const lastDayString = endDate.value; // YYYY-MM-DD 형식의 어제 날짜
 
     if (Object.keys(rawData).length === 0) {
       error.value = '표시할 커밋 데이터가 없습니다.';
       commitData.value = {};
     } else {
-      // (신규) 각 레포의 연간 총 커밋, 오늘 커밋 계산
+      // (신규) 각 레포의 연간 총 커밋, 어제 커밋 계산
       for (const repoName in rawData) {
         const repo = rawData[repoName];
 
@@ -71,13 +71,13 @@ onMounted(async () => {
           const total = repo.values.reduce((acc, val) => acc + (val.count || 0), 0);
           repo.totalYearlyCommits = total;
 
-          // 2. 오늘 커밋 수 계산
-          const todayData = repo.values.find(v => v.date === todayString);
-          repo.todayCommits = todayData ? todayData.count : 0;
+          // 2. 어제 커밋 수 계산
+          const lastDayData = repo.values.find(v => v.date === lastDayString);
+          repo.lastDayCommits = lastDayData ? lastDayData.count : 0;
         } else {
           // 데이터가 비정상적일 경우 0으로 초기화
           repo.totalYearlyCommits = 0;
-          repo.todayCommits = 0;
+          repo.lastDayCommits = 0;
         }
       }
       commitData.value = rawData;
@@ -149,8 +149,8 @@ h1 {
   font-size: 2.5em;
 }
 
-/* (신규) 오늘 날짜 스타일 */
-.today-date {
+/* (신규) 어제 날짜 스타일 */
+.lastDay-date {
   text-align: center;
   font-size: 1.1em;
   font-weight: 500;
@@ -215,20 +215,20 @@ h1 {
 .commit-summary {
   display: flex;
   flex-direction: column;
-  /* 오늘/총계 세로 정렬 */
+  /* 어제/총계 세로 정렬 */
   align-items: flex-end;
   /* 우측 정렬 */
   gap: 4px;
 }
 
-.commit-today {
+.commit-lastDay {
   font-size: 1.1em;
   color: var(--color-text);
 }
 
-.commit-today strong {
+.commit-lastDay strong {
   color: var(--sesac-accent-green);
-  /* 오늘 커밋 강조 */
+  /* 어제 커밋 강조 */
   font-size: 1.2em;
 }
 
@@ -257,5 +257,79 @@ text.vch__month__label {
 
 text.vch__day__label {
   font-size: 10px;
+}
+
+@media (max-width: 600px) {
+
+  #app {
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  img {
+    width: 2.8rem;
+  }
+
+  .repo-section {
+    padding: 18px;
+    margin-bottom: 28px;
+    border-radius: 10px;
+  }
+
+  /* 제목 + 요약이 세로로 정렬되도록 */
+  .repo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .repo-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .commit-summary {
+    width: 100%;
+    align-items: flex-start;
+    margin-top: 6px;
+  }
+
+  .commit-lastDay {
+    font-size: 1.0rem;
+  }
+
+  /* 히트맵이 화면 넘어가도 자연스럽게 스크롤 */
+  .repo-section {
+    overflow-x: auto;
+  }
+
+  /* 월/요일 라벨 크기 축소 */
+  text.vch__month__label {
+    font-size: 10px;
+  }
+
+  text.vch__day__label {
+    font-size: 8px;
+  }
+}
+
+/* 초미니 화면(아이폰 SE 등) */
+@media (max-width: 380px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  img {
+    width: 2.5rem;
+  }
+
+  .repo-header h3 {
+    font-size: 1.2rem;
+  }
 }
 </style>
