@@ -21,8 +21,14 @@
           </div>
         </div>
         <!-- SESAC 테마에 맞는 range-color로 수정 -->
-        <calendar-heatmap :values="repo.values" :end-date="endDate" tooltip-unit="commits" :round="2"
-          :range-color="['#f0f0f0', '#bce3a0', '#7DC242', '#3a9d49', '#006432']" />
+        <calendar-heatmap :values="repo.values" :end-date="endDate" tooltip-unit="commits" :round="2" :range-color="[
+          '#e3f4d7',
+          '#d6f0bf',
+          '#a4d874',
+          '#70be40',
+          '#52a72d',
+          '#2f7c1b'
+        ]" />
       </div>
     </div>
   </div>
