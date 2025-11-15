@@ -56,6 +56,22 @@ onMounted(async () => {
     // GitHub API가 아닌, 우리 앱과 함께 배포된 public/commits.json을 로드
     const response = await axios.get('./commits.json');
     const rawData = response.data;
+    // 1. 전체 레포에서 count 최대값 찾기
+    let globalMax = 0;
+    for (const repoName in rawData) {
+      rawData[repoName].values.forEach(v => {
+        if (v.count > globalMax) globalMax = v.count;
+      });
+    }
+
+    // 2. 각 레포에 globalMax 값을 가진 더미 데이터 삽입
+    for (const repoName in rawData) {
+      rawData[repoName].values.push({
+        date: "2099-12-31",
+        count: globalMax
+      });
+    }
+
     const lastDayString = endDate.value; // YYYY-MM-DD 형식의 어제 날짜
 
     if (Object.keys(rawData).length === 0) {
